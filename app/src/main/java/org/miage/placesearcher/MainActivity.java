@@ -2,15 +2,18 @@ package org.miage.placesearcher;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.RatingBar;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.ratingBar) RatingBar mRatingBar;
+    @BindView(R.id.listView) ListView mListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,20 +22,18 @@ public class MainActivity extends AppCompatActivity {
 
         // Binding ButterKnife annotations now that content view has been set
         ButterKnife.bind(this);
+
+        List<String> listItems = new ArrayList<String>();
+        for (int i = 0; i < 50; i ++) {
+            listItems.add("Item" + i);
+        }
+        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listItems);
+        mListView.setAdapter(adapter);
     }
 
     @Override
     protected void onResume() {
         // Do NOT forget to call super.onResume()
         super.onResume();
-
-        // Increment rating bar's rating
-        this.mRatingBar.setRating(this.mRatingBar.getRating() + 1);
-    }
-
-    @OnClick(R.id.textView)
-    public void clickedOnTextField() {
-        // Decrease rating at each click on TextField
-        this.mRatingBar.setRating(this.mRatingBar.getRating() - 1);
     }
 }

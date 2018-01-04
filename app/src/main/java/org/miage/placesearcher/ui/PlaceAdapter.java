@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.miage.placesearcher.R;
@@ -32,6 +33,9 @@ public class PlaceAdapter extends ArrayAdapter<Place> {
     @BindView(R.id.place_adapter_city)
     TextView mPlaceCityTextView;
 
+    @BindView(R.id.place_adapter_icon)
+    ImageView mPlaceIcon;
+
     public PlaceAdapter(Context context,List<Place> places) {
         super(context, -1, places);
     }
@@ -48,7 +52,11 @@ public class PlaceAdapter extends ArrayAdapter<Place> {
         mPlaceStreetTextView.setText(getItem(position).getStreet());
         mPlaceZipTextView.setText(getItem(position).getZipCode());
         mPlaceCityTextView.setText(getItem(position).getCity());
-
+        if (getItem(position).getStreet().contains("1")) {
+            mPlaceIcon.setImageResource(R.drawable.street_icon);
+        } else {
+            mPlaceIcon.setImageResource(R.drawable.home_icon);
+        }
         return actualView;
     }
 }

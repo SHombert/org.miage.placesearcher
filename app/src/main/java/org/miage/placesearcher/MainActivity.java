@@ -2,8 +2,10 @@ package org.miage.placesearcher;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import org.miage.placesearcher.model.Place;
+import org.miage.placesearcher.ui.PlaceAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +25,15 @@ public class MainActivity extends AppCompatActivity {
         // Binding ButterKnife annotations now that content view has been set
         ButterKnife.bind(this);
 
-        List<String> listItems = new ArrayList<String>();
+        // Define list of places
+        List<Place> places = new ArrayList<Place>();
         for (int i = 0; i < 50; i ++) {
-            listItems.add("Item" + i);
+            places.add(new Place(0, 0, "Street" + i, "44000", "Nantes"));
         }
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listItems);
-        mListView.setAdapter(adapter);
+
+        // Instanciance PlaceAdapter
+        PlaceAdapter placeAdapter = new PlaceAdapter(this, places);
+        mListView.setAdapter(placeAdapter);
     }
 
     @Override

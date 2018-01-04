@@ -5,6 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import org.miage.placesearcher.model.Person;
+import org.miage.placesearcher.ui.PersonAdapter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,11 +26,13 @@ public class MainActivity extends AppCompatActivity {
         // Binding ButterKnife annotations now that content view has been set
         ButterKnife.bind(this);
 
-        List<String> listItems = new ArrayList<String>();
+        // Define list of persons
+        List<Person> listItems = new ArrayList<Person>();
         for (int i = 0; i < 50; i ++) {
-            listItems.add("Item" + i);
+            listItems.add(new Person("FirstName" + i, "LastName" + i));
         }
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listItems);
+        // Instanciate a PersonAdapter
+        ArrayAdapter adapter = new PersonAdapter(this, listItems);
         mListView.setAdapter(adapter);
     }
 

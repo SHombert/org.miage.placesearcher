@@ -3,13 +3,11 @@ package org.miage.placesearcher;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.miage.placesearcher.model.Place;
 import org.miage.placesearcher.ui.PlaceAdapter;
@@ -20,9 +18,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -75,40 +70,6 @@ public class MainActivity extends AppCompatActivity {
         // Do NOT forget to call super.onResume()
         super.onResume();
 
-        // Create AsyncTask
-        AsyncTask<String, Void, Response> asyncTask = new AsyncTask<String, Void, Response>() {
-
-            @Override
-            protected Response doInBackground(String... params) {
-                // Here we are in a new background thread
-                try {
-                    final OkHttpClient okHttpClient = new OkHttpClient();
-                    final Request request = new Request.Builder()
-                            .url(params[0])
-                            .build();
-                    Response response = okHttpClient.newCall(request).execute();
-                    return response;
-                } catch (IOException e) {
-                    // Silent catch, no places will be displayed
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Response response) {
-                super.onPostExecute(response);
-
-                // Here we are in caller Thread (i.e. UI thread here as onResume() is called on UI Thread)
-                if (response != null && response.body() != null) {
-                    try {
-                        Toast toast = Toast.makeText(MainActivity.this, response.body().string(), Toast.LENGTH_LONG);
-                        toast.show();
-                    } catch (IOException e) {
-                       // Silent catch, toast will not be shown
-                    }
-                }
-            }
-        };
-        asyncTask.execute("https://api-adresse.data.gouv.fr/search/?q=Place%20du%20commerce");
+        PlaceSearchService.INSTANCE.searchPlacesFromAdress("Place du commerce");
     }
 }

@@ -1,5 +1,6 @@
 package org.miage.placesearcher;
 
+import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -52,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
                     player.prepare();
                     player.start();
 
+                    Intent seePlaceDetailIntent = new Intent(MainActivity.this, PlaceDetailActivity.class);
+                    startActivity(seePlaceDetailIntent);
                 } catch (IOException e) {
                     // Silent catch : sound will not be played
                 }

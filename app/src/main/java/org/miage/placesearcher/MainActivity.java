@@ -53,7 +53,10 @@ public class MainActivity extends AppCompatActivity {
                     player.prepare();
                     player.start();
 
+                    // Launch PlaceDetailActivity and give the selected place's street
                     Intent seePlaceDetailIntent = new Intent(MainActivity.this, PlaceDetailActivity.class);
+                    Place place = (Place) adapterView.getItemAtPosition(i);
+                    seePlaceDetailIntent.putExtra("placeStreet", place.getStreet());
                     startActivity(seePlaceDetailIntent);
                 } catch (IOException e) {
                     // Silent catch : sound will not be played

@@ -1,13 +1,17 @@
 package org.miage.placesearcher;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.miage.placesearcher.event.EventBusManager;
+import org.miage.placesearcher.event.SearchResultEvent;
+import org.miage.placesearcher.model.Place;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -41,11 +45,17 @@ public class PlaceSearchService {
                     if (response != null && response.body() != null) {
                         JSONObject jsonResult = new JSONObject(response.body().string());
                         JSONArray jsonPlaces = jsonResult.getJSONArray("features");
+
+                        List<Place> foundPlaces = new ArrayList<>();
                         for (int i = 0; i < jsonPlaces.length(); i++) {
                             JSONObject jsonPlace = jsonPlaces.getJSONObject(i);
-                            String label = jsonPlace.getJSONObject("properties").getString("label");
-                            Log.d("RECEIVED PLACE", label);
+                            JSONObject properties = jsonPlace.getJSONObject("properties");
+                            String city = properties.getString("city");
+                            String street = properties.getString("name");
+                            String zipCode = properties.getString("postcode");
+                            foundPlaces.add(new Place(0, 0, street, zipCode, city));
                         }
+                        EventBusManager.BUS.post(new SearchResultEvent(foundPlaces));
                     }
                 } catch (IOException e) {
                     // Silent catch, no places will be displayed

@@ -9,12 +9,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.squareup.otto.Subscribe;
+
+import org.miage.placesearcher.event.EventBusManager;
+import org.miage.placesearcher.event.SearchResultEvent;
 import org.miage.placesearcher.model.Place;
 import org.miage.placesearcher.ui.PlaceAdapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,6 +25,7 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.listView) ListView mListView;
+    private PlaceAdapter mPlaceAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,15 +35,9 @@ public class MainActivity extends AppCompatActivity {
         // Binding ButterKnife annotations now that content view has been set
         ButterKnife.bind(this);
 
-        // Define list of places
-        List<Place> places = new ArrayList<Place>();
-        for (int i = 0; i < 50; i ++) {
-            places.add(new Place(0, 0, "Street" + i, "44000", "Nantes"));
-        }
-
-        // Instanciance PlaceAdapter
-        PlaceAdapter placeAdapter = new PlaceAdapter(this, places);
-        mListView.setAdapter(placeAdapter);
+        // Instanciance PlaceAdapter with empty content
+        mPlaceAdapter = new PlaceAdapter(this, new ArrayList<Place>());
+        mListView.setAdapter(mPlaceAdapter);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -70,6 +68,25 @@ public class MainActivity extends AppCompatActivity {
         // Do NOT forget to call super.onResume()
         super.onResume();
 
+        // Register to Event bus : now each time an event is posted, the activity will receive it if it is @Subscribed to this event
+        EventBusManager.BUS.register(this);
+
         PlaceSearchService.INSTANCE.searchPlacesFromAddress("Place du commerce");
+    }
+
+    @Override
+    protected void onPause() {
+        // Unregister from Event bus : if event are posted now, the activity will not receive it
+        EventBusManager.BUS.unregister(this);
+
+        super.onPause();
+    }
+
+    @Subscribe
+    public void searchResult(final SearchResultEvent event) {
+        // Here someone has posted a SearchResultEvent
+        // Update adapter's model
+        mPlaceAdapter.clear();
+        mPlaceAdapter.addAll(event.getPlaces());
     }
 }

@@ -73,7 +73,9 @@ public class PlaceSearchService {
             // Here we are in main thread again
             super.onPostExecute(foundPlaces);
 
-            EventBusManager.BUS.post(new SearchResultEvent(foundPlaces));
+            if (foundPlaces != null) {
+                EventBusManager.BUS.post(new SearchResultEvent(foundPlaces));
+            }
         }
     }
 }

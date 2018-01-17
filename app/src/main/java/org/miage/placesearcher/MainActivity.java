@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         // Unregister from Event bus : if event are posted now, the activity will not receive it
         EventBusManager.BUS.unregister(this);
 
+        // Do NOT forget to call super.onPause()
         super.onPause();
     }
 

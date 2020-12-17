@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 29
@@ -51,4 +52,9 @@ dependencies {
 
     // Add Active Android
     implementation 'com.michaelpardo:activeandroid:3+'
+    
+    // Add firebase
+    implementation platform('com.google.firebase:firebase-bom:26.1.1')
+    implementation 'com.google.firebase:firebase-analytics'
 }
+
